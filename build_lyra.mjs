@@ -25,7 +25,7 @@ $.verbose = true;
 if (os.platform() === 'darwin') {
 	await $`swift build -c release`;
 } else if (os.platform() === 'linux') {
-	await $`swift run -v --enable-test-discovery -Xlinker -ludev`;
+	await $`swift build --enable-test-discovery -Xlinker -ludev`;
 } else {
 	await echo('Platform not supported. Exiting.');
 	exit(1);
