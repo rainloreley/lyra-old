@@ -41,7 +41,7 @@ func routes(_ app: Application) throws {
 			return "100"
 		}
 		
-		let projectDirectory = "\(app.directory.workingDirectory)dmxprojects/"
+		let projectDirectory = "\(Bundle.main.resourcePath!)/dmxprojects/"
 		if FileManager.default.fileExists(atPath: "\(projectDirectory)\(projectUid).json") {
 			do {
 				let content = try String(contentsOf: URL(string: "file://\(projectDirectory)\(projectUid).json")!, encoding: .utf8)
@@ -60,7 +60,7 @@ func routes(_ app: Application) throws {
 	app.get("projects") { req -> String in
 		var jsonArray = JSON([])
 		
-		let projectDirectory = "\(app.directory.workingDirectory)dmxprojects/"
+		let projectDirectory = "\(Bundle.main.resourcePath!)/dmxprojects/"
 		// check if main db exists
 		if FileManager.default.fileExists(atPath: "\(projectDirectory)db.json") {
 			do {
@@ -118,7 +118,7 @@ func routes(_ app: Application) throws {
 		do {
 			if let data = body?.data(using: .utf8) {
 				let projectjson = try JSON(data: data)
-				let projectDirectory = "\(app.directory.workingDirectory)dmxprojects/"
+				let projectDirectory = "\(Bundle.main.resourcePath!)/dmxprojects/"
 				if projectUid == projectjson["uid"].stringValue {
 					// check if main db exists
 					if FileManager.default.fileExists(atPath: "\(projectDirectory)db.json") {

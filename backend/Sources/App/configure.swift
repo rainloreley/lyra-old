@@ -17,7 +17,7 @@ public func configure(_ app: Application) throws {
     // max payload size
     app.routes.defaultMaxBodySize = "50mb"
 
-	let projectDirectory = "\(app.directory.workingDirectory)dmxprojects/"
+	let projectDirectory = "\(Bundle.main.resourcePath!)/dmxprojects/"
 	
 	// create project folder when needed
 	if !FileManager.default.fileExists(atPath: projectDirectory) {

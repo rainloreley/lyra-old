@@ -1,3 +1,4 @@
 .build/
 client/
 build_lyra-copy.sh
+build_lyra-old.sh
