@@ -24,6 +24,10 @@ const DeviceSlider: FunctionComponent<Device_Slider> = ({
 	valueupdate,
 	state,
 }) => {
+	useEffect(() => {
+		setSliderValue(state);
+	}, [state]);
+
 	const [sliderValue, setSliderValue] = useState(state);
 
 	return (

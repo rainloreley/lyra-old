@@ -33,6 +33,13 @@ interface DeviceDefinitionModeUIChannelConfig {
 	slider_settings?: DDMUICCSliderSettings;
 	dropdown_options?: DDMUICCDropdownOption[];
 	button_settings?: DDMUICCButtonSettings;
+	colorpicker_settings?: DDMUICCColorPickerSettings;
+}
+
+interface DDMUICCColorPickerSettings {
+	channel_red: number;
+	channel_green: number;
+	channel_blue: number;
 }
 
 interface DDMUICCJoystickAxis {
@@ -77,6 +84,7 @@ enum DeviceDefinitionModeUIChannelType {
 	dropdown = 'dropdown',
 	slider = 'slider',
 	button = 'button',
+	colorpicker = 'colorpicker',
 }
 
 interface DDMUICCDropdownOption {

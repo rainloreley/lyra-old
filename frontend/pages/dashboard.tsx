@@ -154,6 +154,14 @@ const Dashboard: NextPage = () => {
 
 		// @ts-ignore
 		setSelectedDevice(_selectedDevice);
+
+		setDevices((e) => {
+			e
+				.find((g) => g.id === _selectedDevice.id)!
+				.channel_state.find((f) => f.channel == parseInt(channel))!.value =
+				value;
+			return e;
+		});
 	}
 
 	function saveProject() {

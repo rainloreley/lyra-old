@@ -6,7 +6,7 @@ import {
 	DDMUICCDropdownOptionType,
 	DeviceDefinition,
 	DeviceDefinitionModeUIChannelType,
-} from './device_definitions';
+} from '../device_definitions';
 
 const Stairville_MHX50Plus: DeviceDefinition = {
 	vendor: 'Stairville',
