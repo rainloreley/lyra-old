@@ -1,0 +1,13 @@
+*~
+*.pyc
+*.a
+*.o
+*.so
+*.exe
+*.dll
+*.dylib
+simple_example
+simple_example_static
+usbdmx_example
+usbdmx_example_static
+loopback_test
