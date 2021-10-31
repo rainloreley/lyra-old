@@ -7,7 +7,9 @@ public func configure(_ app: Application) throws {
     // app.middleware.use(FileMiddleware(publicDirectory: app.directory.publicDirectory))
 
     // register routes
-	
+    
+    app.http.server.configuration.hostname = "0.0.0.0"
+    
 	let corsConfiguration = CORSMiddleware.Configuration(allowedOrigin: .all, allowedMethods: [.GET], allowedHeaders: [.accept, .authorization, .contentType, .origin, .accessControlAllowOrigin])
 	
 	let cors = CORSMiddleware(configuration: corsConfiguration)
