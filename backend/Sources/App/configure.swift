@@ -36,17 +36,16 @@ public func configure(_ app: Application) throws {
 	
 	
 	
+    // register routes
     try routes(app)
-    /*let frontendDirectory = "\(app.directory.workingDirectory)lyra-frontend"
-    print(frontendDirectory)
-    //app.middleware.use(FileMiddleware(publicDirectory: frontendDirectory))*/
+    
+    // serve lyra-frontend
     let filePath = Bundle.main.resourcePath!
     print(filePath)
     app.middleware.use(FileMiddleware(publicDirectory: "\(Bundle.main.resourcePath!)/lyra-frontend"))
-    //runClient(app)
 }
 
-func runClient(_ app: Application) {
+/*func runClient(_ app: Application) {
     let lyra_client_repo = "https://github.com/rainloreley/lyra-ui"
     let clientDirectory = "\(app.directory.workingDirectory)lyra_client/"
     do {
@@ -88,17 +87,4 @@ func shell(_ command: String, waitForFinish: Bool = false) throws {
     let data = pipe.fileHandleForReading.readDataToEndOfFile()
     let output = String(data: data, encoding: .utf8)!
     print(output)
-    
-    /*if waitForFinish {
-        task.waitUntilExit()
-        return task.terminationStatus
-    }
-    else {
-        return 0
-    }*/
-    
-    /*let data = pipe.fileHandleForReading.readDataToEndOfFile()
-    let output = String(data: data, encoding: .utf8)!
-    
-    return output*/
-}
+}*/
