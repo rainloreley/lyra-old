@@ -7,7 +7,7 @@ const echo = (message) => {
 	console.log(message);
 };
 
-$.verbose = true;
+$.verbose = false;
 
 const ls = await $`ls`;
 
