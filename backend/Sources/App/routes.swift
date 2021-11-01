@@ -237,18 +237,19 @@ func routes(_ app: Application) throws {
 		
 		ws.onClose.whenComplete { result in
             print("WebSocket connection closed")
-			if let interface = mountedInterface {
+			/*if let interface = mountedInterface {
                 if interface.isOpen {
                     interface.close()
                 }
-			}
+			}*/
 		}
 		
 		ws.onText { _ws, command in
 			let data = command.data(using: .utf8)!
 			do {
 				if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
-					if let address = json["address"] as? Int, let value = json["value"] as? Int {
+                    print(json)
+                    if let address = json["address"] as? Int, let value = json["value"] as? Int {
 						mountedInterface?.setDMX(address: address, value: value)
 						_ws.send("305")
 					}
