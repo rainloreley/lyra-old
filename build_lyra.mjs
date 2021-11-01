@@ -18,7 +18,10 @@ if (!ls.stdout.includes('build_lyra.mjs')) {
 
 echo(__dirname);
 nothrow(await $`rm -rf .build`);
+nothrow(await $`rm -rf ./client/backend_bundle`);
+
 await $`mkdir .build`;
+await $`mkdir ./client/backend_bundle`;
 await $`mkdir .build/lyra`;
 cd('backend');
 $.verbose = true;
@@ -31,15 +34,15 @@ if (os.platform() === 'darwin') {
 	exit(1);
 }
 
-await $`cp .build/release/Run ../.build/lyra/lyra`;
+await $`cp .build/release/Run ../client/backend_bundle/lyra`;
 
-cd('frontend');
+cd('client');
 await $`yarn`;
 await $`yarn build`;
-await $`yarn export`;
+/*await $`yarn export`;
 await $`mkdir ../.build/lyra/lyra-frontend`;
 await $`cp -r out/* ../.build/lyra/lyra-frontend`;
 cd('.build');
-await $`zip -r lyra-${os.platform()}.zip lyra/`;
+await $`zip -r lyra-${os.platform()}.zip lyra/`;*/
 echo('Done!');
 exit(0);

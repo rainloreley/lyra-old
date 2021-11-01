@@ -1,5 +1,7 @@
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { app, Menu } from 'electron';
 import serve from 'electron-serve';
+import path from 'path';
 import { createWindow } from './helpers';
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
@@ -10,8 +12,42 @@ if (isProd) {
 	app.setPath('userData', `${app.getPath('userData')} (development)`);
 }
 
+var backend_exec: ChildProcessWithoutNullStreams;
+
 (async () => {
 	await app.whenReady();
+
+	if (isProd) {
+		let backend_bundle_url_path = path.join(
+			process.resourcesPath,
+			'/backend_bundle/'
+		);
+		console.log(backend_bundle_url_path);
+
+		try {
+			let kill_8080_exec = spawn('kill', ['-9', '$(lsof -t -i:8080)']);
+			kill_8080_exec.stdout.on('data', (data) => {
+				console.log(`stdout: ${data}`);
+			});
+			kill_8080_exec.stderr.on('data', (data) => {
+				console.log(`stderr: ${data}`);
+			});
+		} catch {
+			// do absolutely nothing
+		}
+
+		backend_exec = spawn(`${backend_bundle_url_path}lyra`);
+
+		backend_exec.stdout.on('data', (data) => {
+			console.log(`stdout: ${data}`);
+		});
+		backend_exec.stderr.on('data', (data) => {
+			console.log(`stderr: ${data}`);
+		});
+		backend_exec.on('close', (code) => {
+			console.log(`child process exited with code ${code}`);
+		});
+	}
 
 	const mainWindow = createWindow('main', {
 		width: 1000,
@@ -133,5 +169,8 @@ if (isProd) {
 })();
 
 app.on('window-all-closed', () => {
+	if (isProd) {
+		backend_exec.kill();
+	}
 	app.quit();
 });
