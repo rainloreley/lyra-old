@@ -6,6 +6,8 @@ Open-Source DMX control software running in the browser.
 
 ## Installation
 
+<span style="color:red">🚨 **The build script currently doesn't work due to a new Lyra backend.** 🚨</span>
+
 Currently, you need to compile the project by yourself. In the future, a ready-to-use zip file will be available.
 Supported operating systems: macOS, Linux
 
