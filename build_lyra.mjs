@@ -7,6 +7,10 @@ const echo = (message) => {
 	console.log(message);
 };
 
+echo("======");
+echo("This script currently doesn't work due to a new Lyra backend. I'll fix it in the future.");
+echo("======");
+exit(0);
 $.verbose = false;
 
 const ls = await $`ls`;
