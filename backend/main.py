@@ -1,15 +1,12 @@
-import engineio
-import usbdmx
+from usbdmx import usbdmx
 from flask import Flask, jsonify, request
 import os
 import json
 import logging
 from pathlib import Path
-from websocket_server import WebsocketServer
 #from flask_cors import CORS, cross_origin
 from flask_cors import CORS
-from flask_socketio import SocketIO, emit
-import atexit
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 #app.config["SECRET_KEY"] = "secret!"

@@ -6,7 +6,7 @@
 *.exe
 *.dll
 *.dylib
-simple_example
+usbdmx/simple_example
 simple_example_static
 usbdmx_example
 usbdmx_example_static
