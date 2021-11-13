@@ -1,26 +1,17 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
 import styles from '../styles/Dashboard.module.css';
 import { useState, useEffect, useContext } from 'react';
-import dmxDevices from '../devices/devicelist';
-import DeviceDropdown from '../components/device_components/dropdown';
-//import { GlobalInterfaceServer, GlobalProjectManager } from './index';
 import { useRouter } from 'next/dist/client/router';
-import { getRouteRegex } from 'next/dist/shared/lib/router/utils';
-import DeviceSlider from '../components/device_components/slider';
-import DeviceColorWheel from '../components/device_components/colorwheel';
 import ProjectManager, {
 	DMXProjectDevice,
 	DMXProjectDeviceChannelState,
 } from '../backend/ProjectManager';
-import { v4 as uuidv4 } from 'uuid';
 import DashboardSidebar from '../components/dashboard_sidebar';
 import { DeviceDefinition } from '../devices/device_definitions';
-import LoadingSpinner from '../components/loadingSpinner';
-import SaveDiskIcon from '../components/icons/save-disk';
-
 import { AppControlContext } from '../components/appControlHandler';
+import {ipcRenderer} from "electron";
+import SceneListSidebar from "../components/sceneList_sidebar";
 
 const Dashboard: NextPage = () => {
 	const router = useRouter();
@@ -28,21 +19,20 @@ const Dashboard: NextPage = () => {
 	const [selectedDevice, setSelectedDevice] = useState<DMXProjectDevice | null>(
 		null
 	);
+	const [showSceneList, setShowSceneList] = useState(false);
+
 	const [reloadRequired, setReloadRequired] = useState(false);
+
 
 	const [devices, setDevices] = useState<DMXProjectDevice[]>([]);
 
 	const {
-		sendDMXCommand,
 		GlobalInterfaceServer,
 		GlobalProjectManager,
 		initialDMXSetup,
 		app_initialConfigOver,
 		setApp_initialConfigOver,
 	} = useContext(AppControlContext);
-
-	var autosaveInterval: any;
-	var notificationcenterInterval: any;
 
 	useEffect(() => {
 		if (
@@ -55,43 +45,15 @@ const Dashboard: NextPage = () => {
 			return;
 		}
 		setDevices(GlobalProjectManager.currentProject.devices);
-		/*GlobalInterfaceServer.closeCallback = webSocketDidClose;
-		if (GlobalInterfaceServer.websocket === undefined) {
-			GlobalInterfaceServer.openCallback = function () {
-				initialDMXSetup();
-			};
-			GlobalInterfaceServer.configureWebsocket();
-		} else {
-			if (
-				GlobalInterfaceServer.websocket.readyState ==
-				GlobalInterfaceServer.websocket.OPEN
-			) {
-				initialDMXSetup();
-			}
-		}*/
-
-		/*clearInterval(autosaveInterval);
-		clearInterval(notificationcenterInterval);
-
-		autosaveInterval = setInterval(() => {
-			saveProject();
-		}, 20000);*/
-
-		/*notificationcenterInterval = setInterval(() => {
-			console.log(Date.now());
-			const newNotificationArray = notificationCenter.filter(
-				(e) => e.dismissAt === undefined || e.dismissAt > Date.now()
-			);
-			setnotificationCenter((e) => [
-				...e.filter(
-					(f) => f.dismissAt === undefined || f.dismissAt > Date.now()
-				),
-			]);
-		}, 1000);*/
+		ipcRenderer.on('dashboard-show-scene-list', function (e, f) {
+			setShowSceneList(true);
+		});
 	}, []);
 
 	useEffect(() => {
 		if (
+			GlobalInterfaceServer !== null &&
+			GlobalInterfaceServer.websocket !== undefined &&
 			GlobalInterfaceServer.websocket.readyState === 1 &&
 			!app_initialConfigOver
 		) {
@@ -99,40 +61,6 @@ const Dashboard: NextPage = () => {
 			setApp_initialConfigOver(true);
 		}
 	}, [GlobalInterfaceServer?.websocket]);
-
-	/*function webSocketDidClose() {
-		console.log('connection closed');
-		setReloadRequired(true);
-	}*/
-
-	/*function sendDMXCommand(channel: string, value: number) {
-		GlobalInterfaceServer?.sendDMXCommand(
-			(selectedDevice!.start_channel - 1 + parseInt(channel)).toString(),
-			value.toString()
-		);
-
-		const _selectedDevice = { ...selectedDevice };
-		_selectedDevice!.channel_state!.filter(
-			(e) => e.channel == parseInt(channel)
-		)[0].value = value;
-
-		//GlobalProjectManager!.currentProject!.devices.filter((e) => e.start_channel == selectedDevice?.start_channel)[0].channel_state.filter((e) => e.channel == parseInt(channel))[0].value = value;
-		// @ts-ignore
-		GlobalProjectManager!.currentProject!.devices.filter(
-			(e) => e.start_channel == selectedDevice?.start_channel
-		)[0] = _selectedDevice;
-
-		// @ts-ignore
-		setSelectedDevice(_selectedDevice);
-
-		setDevices((e) => {
-			e
-				.find((g) => g.id === _selectedDevice.id)!
-				.channel_state.find((f) => f.channel == parseInt(channel))!.value =
-				value;
-			return e;
-		});
-	}*/
 
 	function saveProject() {}
 	return (
@@ -196,6 +124,13 @@ const Dashboard: NextPage = () => {
 							</button>
 						))}
 					</div>
+					{showSceneList ? (
+						<SceneListSidebar hideView={() => {
+							setShowSceneList(false);
+						}} />
+					) : (
+						<div />
+					)}
 				</div>
 			</div>
 		</div>

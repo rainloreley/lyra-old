@@ -1,7 +1,7 @@
-import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
+//import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 import { app, Menu } from 'electron';
 import serve from 'electron-serve';
-import path from 'path';
+//import path from 'path';
 import { createWindow } from './helpers';
 
 const isProd: boolean = process.env.NODE_ENV === 'production';
@@ -12,12 +12,12 @@ if (isProd) {
 	app.setPath('userData', `${app.getPath('userData')} (development)`);
 }
 
-var backend_exec: ChildProcessWithoutNullStreams;
+//var backend_exec: ChildProcessWithoutNullStreams;
 
 (async () => {
 	await app.whenReady();
 
-	if (isProd) {
+	/*if (isProd) {
 		let backend_bundle_url_path = path.join(
 			process.resourcesPath,
 			'/backend_bundle/'
@@ -47,7 +47,7 @@ var backend_exec: ChildProcessWithoutNullStreams;
 		backend_exec.on('close', (code) => {
 			console.log(`child process exited with code ${code}`);
 		});
-	}
+	}*/
 
 	const mainWindow = createWindow('main', {
 		width: 1000,
@@ -104,6 +104,15 @@ var backend_exec: ChildProcessWithoutNullStreams;
 		{
 			label: 'View',
 			submenu: [
+				{
+					label: 'Show scene list',
+					click: () => {
+						mainWindow.webContents.send('dashboard-show-scene-list');
+					},
+				},
+				{
+					type: "separator"
+				},
 				{
 					role: 'reload',
 				},
@@ -169,8 +178,8 @@ var backend_exec: ChildProcessWithoutNullStreams;
 })();
 
 app.on('window-all-closed', () => {
-	if (isProd) {
+	/*if (isProd) {
 		backend_exec.kill();
-	}
+	}*/
 	app.quit();
 });

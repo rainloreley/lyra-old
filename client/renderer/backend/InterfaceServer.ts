@@ -6,6 +6,7 @@ import {
 } from 'es-cookie';
 import { w3cwebsocket } from 'websocket';
 import { v4 as uuidv4 } from 'uuid';
+import { io } from 'socket.io-client';
 
 class InterfaceServer {
 	domain: string;
@@ -14,15 +15,19 @@ class InterfaceServer {
 	interfaceId?: string;
 	_httpProtocol: string;
 	uid: string;
+	_httpPort: string;
+	_wsPort: string;
 
 	openCallback: () => void;
 	closeCallback: () => void;
 
-	websocket?: w3cwebsocket;
+	websocket?: any;
 
 	constructor() {
 		this.uid = uuidv4();
-		this.domain = '127.0.0.1:8080';
+		this._httpPort = '3832';
+		this._wsPort = '3832';
+		this.domain = '127.0.0.1';
 		this.availableInterfaces = [];
 		this.connected = false;
 		this._httpProtocol = 'http';
@@ -36,8 +41,20 @@ class InterfaceServer {
 	}
 
 	async configureWebsocket() {
-		this.websocket = new w3cwebsocket(
-			`ws://${this.domain}/interface/${this.interfaceId}`
+		this.websocket = io(`ws://${this.domain}:${this._wsPort}`);
+
+		this.websocket.on('connect', () => {
+			this.websocket!.emit('open_interface', { interface: this.interfaceId! });
+			this.openCallback();
+		});
+		this.websocket.on('disconnect', this.closeCallback);
+
+		this.websocket.on('interface_message', function (data) {
+			console.log(data);
+		});
+
+		/*this.websocket = new w3cwebsocket(
+			`ws://${this.domain}:${this._wsPort}/interface`
 			//'echo-protocol'
 		);
 		this.websocket.onopen = this.openCallback;
@@ -47,7 +64,7 @@ class InterfaceServer {
 		this.websocket.onclose = this.closeCallback;
 		this.websocket.onmessage = function (message) {
 			console.log(message);
-		};
+		};*/
 	}
 
 	async sendDMXCommand(address: number, value: number) {
@@ -55,9 +72,11 @@ class InterfaceServer {
 			const data = {
 				address: address,
 				value: parseInt(value.toFixed(0)),
+				interface: this.interfaceId!,
 			};
 			if (this.websocket !== undefined) {
-				this.websocket?.send(JSON.stringify(data));
+				//this.websocket?.send(JSON.stringify(data));
+				this.websocket.emit('interface_message', data);
 				accept('');
 			} else {
 				reject('');
@@ -68,10 +87,12 @@ class InterfaceServer {
 	async getAvailableInterfaces() {
 		return new Promise<string[]>((accept, reject) => {
 			axios
-				.get<string[]>(`${this._httpProtocol}://${this.domain}/interfaces/find`)
+				.get<string[]>(
+					`${this._httpProtocol}://${this.domain}:${this._httpPort}/interfaces/find`
+				)
 				.then((response) => {
 					let savedInterface = getCookie('interface_id') ?? '';
-					const data: string[] = response.data;
+					const data: string[] = response.data['interfaces'];
 					if (data.includes(savedInterface)) {
 						this.interfaceId = savedInterface;
 					} else {

@@ -92,7 +92,7 @@ const AppControlProvider = ({ children }) => {
 					(f) => f.dismissAt === undefined || f.dismissAt > Date.now()
 				),
 			]);
-		}, 1000);
+		}, 200);
 	}, []);
 
 	useEffect(() => {
@@ -247,12 +247,6 @@ const AppControlProvider = ({ children }) => {
 		setApp_initialConfigOver: setApp_initialConfigOver,
 	};
 
-	/*return (
-		<AppControlContext.Provider value={state}>
-			{children}
-		</AppControlContext.Provider>
-	);*/
-
 	return (
 		<div className="overflow-hidden w-screen h-screen">
 			{reloadRequired ? (
@@ -281,7 +275,7 @@ const AppControlProvider = ({ children }) => {
 			>
 				<div className="absolute bottom-6 right-6 flex z-10 text-white flex-col">
 					{notificationCenter.map((notification) => (
-						<div
+						<div key={notification.uid}
 							className={`m-4 flex flex-row p-3 rounded-lg w-64 justify-between pl-4 ${
 								notification.status === NotificationCenterElementStatus.error
 									? 'bg-red-500'

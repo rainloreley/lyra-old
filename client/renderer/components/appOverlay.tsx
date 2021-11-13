@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import LoadingSpinner from './loadingSpinner';
 import ProjectManager from '../backend/ProjectManager';
 
-interface NotificationCenterElement {
+/*interface NotificationCenterElement {
 	uid: string;
 	text: string;
 	status: NotificationCenterElementStatus;
@@ -43,7 +43,6 @@ const AppOverlay = ({ children }) => {
 		//});
 		//ipcRenderer.on('save-project', (e) => saveProject());
 		notificationcenterInterval = setInterval(() => {
-			console.log(Date.now());
 			const newNotificationArray = notificationCenter.filter(
 				(e) => e.dismissAt === undefined || e.dismissAt > Date.now()
 			);
@@ -52,7 +51,7 @@ const AppOverlay = ({ children }) => {
 					(f) => f.dismissAt === undefined || f.dismissAt > Date.now()
 				),
 			]);
-		}, 1000);
+		}, 1);
 	}, []);
 
 	useEffect(() => {
@@ -190,4 +189,4 @@ const AppOverlay = ({ children }) => {
 		</div>
 	);
 };
-export default AppOverlay;
+export default AppOverlay;*/
