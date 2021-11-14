@@ -5,3 +5,4 @@ app/
 dist/
 backend_bundle/
 .idea/
+.vscode/
