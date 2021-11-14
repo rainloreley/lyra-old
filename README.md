@@ -1,6 +1,6 @@
 # Lyra
 
-Open-Source DMX control software running in the browser.
+Open-Source DMX control software
 
 **This software is in development and probably won't work properly yet**
 
